@@ -1,12 +1,40 @@
-# Flow Annealed Importance Sampling Bootstrap (FAB) with Jax
-[[FAB paper]](https://arxiv.org/abs/2208.01893)
+# Flow Annealed Importance Sampling Bootstrap (FAB) with Jax and Reflection Hamiltonian Monte Carlo (RHMC)
+
+This fork of [`fabjax`](https://github.com/lollcat/FAB-JAX/) based on the [[FAB paper]](https://arxiv.org/abs/2208.01893) extends the existing code
+to include reflections in the Hamiltonian Monte Carlo (HMC) update steps.
+
+The reason for this is that HMC has a low efficiency on limited intervals as explained in the 
+[`rhmc-jax` repository](https://github.com/annalena-k/rhmc-jax). As a result, HMC chains that move outside the limited
+interval on which e.g. a neural spline flow is defined, are rejected in `fab-jax`.
+To solve this problem, we include the `rhmc-jax` implementation based on
+[reflection HMC (RHMC)](https://papers.nips.cc/paper_files/paper/2015/hash/8303a79b1e19a194f1875981be5bdb6f-Abstract.html) 
+in the `fab-jax` package.
 
 See `experiments` for training runs on various common problems using FAB.
 
-## Install
+## Installation
+After cloning the `fab-jax` code locally, the package can be installed in editable mode via
 ```shell
 pip install -e .
 ```
+Since the `rhmc-jax` package is included in this fork via a git submodule, it has to be initialized with
+```shell
+git submodule init
+```
+and updated with
+```shell
+git submodule update
+```
+Alternatively, it can be initialized directly during the `git clone` by including `--recurse-submodules`
+```shell
+git clone --recurse-submodules https://github.com/annalena-k/fab-jax-rhmc.git
+```
+
+To install the submodule, enter the `rhmc-jax` folder in the command line (`cd rhmc-jax`) and run
+```shell
+pip install -e .
+```
+
 
 ## Key tips
  - Please reach out to us if you would like us to help apply FAB to a problem of interest!
@@ -73,15 +101,9 @@ use WANDB (the list logger is used inside the Quickstart notebook).
 
 
 
-## Related Libraries
-- [Annealed Flow Transport](https://github.com/google-deepmind/annealed_flow_transport/tree/master): CRAFT algorithm, and many target densities that were used in this library.
-- [Diffusion Generative Flow Samples](https://github.com/zdhNarsil/Diffusion-Generative-Flow-Samplers): Sampling from unnormalized targets using diffusion models.
-- [fab-torch](https://github.com/lollcat/fab-torch): Original FAB implementation, contains code for alanine dipeptide problem.
-
-
 ## Citation
 
-If you use this code in your research, please cite it as:
+If you use this code in your research, please cite the original `fab-jax` paper as:
 
 > Laurence I. Midgley, Vincent Stimper, Gregor N. C. Simm, Bernhard Schölkopf, José Miguel Hernández-Lobato.
 > Flow Annealed Importance Sampling Bootstrap. The Eleventh International Conference on Learning Representations. 2023.
