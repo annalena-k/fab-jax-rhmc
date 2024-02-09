@@ -1,0 +1,3 @@
+[submodule "rhmc-jax"]
+	path = rhmc-jax
+	url = https://github.com/annalena-k/rhmc-jax.git
